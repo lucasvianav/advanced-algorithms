@@ -5,5 +5,8 @@ if [ -z "$1" ]; then
 fi
 
 mkdir "$1"
-cp "Makefile" "$1"
-cp "template.cpp" "$1/main.cpp"
+cp ./template/* "$1"
+mv ~/Downloads/assignment.pdf "$1"
+mupdf "$1/assignment.pdf" &
+
+disown
