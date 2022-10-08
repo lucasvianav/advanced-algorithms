@@ -46,32 +46,60 @@ typedef double ld;
 
 class Solution {
 private:
-  vi data;
-  int n;
+  vi days;
+  int n_mountains;
+  unordered_map<int, int> cache;
 public:
   Solution(vi *data) {
-    this->data = *data;
-    this->n = data->size();
+    this->days = *data;
+    this->n_mountains = data->size();
   }
-  int solve() { return 0; }
+
+  int solve(int curr) {
+    if (curr == n_mountains - 1) {
+      return 0;
+    }
+
+    if (!present(cache, curr)) {
+      cache[curr] = INT_MAX;
+      ffor(i, 1, 3) {
+        if (curr + i < n_mountains) {
+          cache[curr] = min(cache[curr], solve(curr + i) + abs(days[curr] - days[curr + i]));
+        }
+      }
+    }
+
+    return cache[curr];
+  }
+
+  int solve() {
+    this->cache[n_mountains - 1] = 0;
+    this->cache[n_mountains] = 0;
+
+    fforr(i, 0, n_mountains - 1) {
+      cache[i] = INT_MAX;
+      ffor(j, 1, 3) {
+        if (i + j < n_mountains) {
+          cache[i] = min(cache[i], cache[i + j] + abs(days[i] - days[i + j]));
+        }
+      }
+    }
+
+    return cache[0];
+  }
 };
 
 int main() {
-  int n_cases, n_inputs, tmp;
+  int n_mountains, tmp;
   vi data;
 
-  cin >> n_cases;
-  ffor(i, 0, n_cases) {
-    cin >> n_inputs;
-
-    ffor(j, 0, n_inputs) {
-      cin >> tmp;
-      data.pb(tmp);
-    }
-
-    cout << Solution(&data).solve() << endl;
-    data.clear();
+  cin >> n_mountains;
+  ffor(j, 0, n_mountains) {
+    cin >> tmp;
+    data.pb(tmp);
   }
+
+  cout << Solution(&data).solve() << endl;
 
   return 0;
 }
