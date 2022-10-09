@@ -32,7 +32,6 @@
 using namespace std;
 
 // Shorthand for commonly used types
-typedef unordered_map<int, int> umi;
 typedef vector<int> vi;
 typedef vector<vi> vvi;
 typedef pair<int, int> ii;
@@ -45,35 +44,54 @@ typedef double ld;
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#define MAX 1000000007
+#define EMPTY '.'
+
 class Solution {
 private:
-  vi data;
-  int n;
+  vector<vector<char>> grid;
+  unordered_map<int, unordered_map<int, int>> cache;
+  int n_rows, n_cols;
 
 public:
-  Solution(vi *data) {
-    this->data = *data;
-    this->n = data->size();
+  Solution(vector<vector<char>> *data) {
+    this->grid = *data;
+    this->n_rows = data->size();
+    this->n_cols = (*data)[0].size();
   }
-  int solve() { return 0; }
+  ll solve() { return solve(0, 0); }
+
+  ll solve(int i, int j) {
+    if (i == n_rows || j == n_cols || grid[i][j] != EMPTY) {
+      return 0;
+    } else if (i == n_rows - 1 && j == n_cols - 1) {
+      return 1;
+    } else if (!present(cache[i], j)) {
+      cache[i][j] = (solve(i, j + 1) + solve(i + 1, j)) % MAX;
+    }
+
+    return cache[i][j];
+  }
 };
 
 int main() {
-  int n_cases, n_inputs, tmp;
-  vi data;
+  int n_rows, n_cols;
+  char tmp;
+  vector<char> tmp_v;
+  vector<vector<char>> data;
 
-  cin >> n_cases;
-  ffor(i, 0, n_cases) {
-    cin >> n_inputs;
+  cin >> n_rows >> n_cols;
 
-    ffor(j, 0, n_inputs) {
+  ffor(i, 0, n_rows) {
+    ffor(j, 0, n_cols) {
       cin >> tmp;
-      data.pb(tmp);
+      tmp_v.pb(tmp);
     }
-
-    cout << Solution(&data).solve() << endl;
-    data.clear();
+    data.pb(tmp_v);
+    tmp_v.clear();
   }
+
+  cout << Solution(&data).solve() << endl;
 
   return 0;
 }

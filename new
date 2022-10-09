@@ -8,5 +8,8 @@ mkdir "$1"
 cp ./template/* "$1"
 mv ~/Downloads/assignment.pdf "$1"
 mupdf "$1/assignment.pdf" &
+cd "$1"
+unzip ~/Downloads/Casos\ de\ Teste*.zip
+rm ~/Downloads/Casos\ de\ Teste*.zip
 
 disown

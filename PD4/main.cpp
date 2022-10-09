@@ -33,6 +33,7 @@ using namespace std;
 
 // Shorthand for commonly used types
 typedef unordered_map<int, int> umi;
+typedef unordered_map<int, umi> umumi;
 typedef vector<int> vi;
 typedef vector<vi> vvi;
 typedef pair<int, int> ii;
@@ -55,25 +56,32 @@ public:
     this->data = *data;
     this->n = data->size();
   }
-  int solve() { return 0; }
+  int solve() {
+    vi lengths(n, 1);
+
+    ffor(i, 0, n) {
+      fforr(j, 0, i) {
+        if (data[i] > data[j]) {
+          lengths[i] = max(lengths[i], lengths[j] + 1);
+        }
+      }
+    }
+
+    return *max_element(all(lengths));
+  }
 };
 
 int main() {
-  int n_cases, n_inputs, tmp;
+  int n_nums, tmp;
   vi data;
 
-  cin >> n_cases;
-  ffor(i, 0, n_cases) {
-    cin >> n_inputs;
-
-    ffor(j, 0, n_inputs) {
-      cin >> tmp;
-      data.pb(tmp);
-    }
-
-    cout << Solution(&data).solve() << endl;
-    data.clear();
+  cin >> n_nums;
+  ffor(j, 0, n_nums) {
+    cin >> tmp;
+    data.pb(tmp);
   }
+
+  cout << Solution(&data).solve() << endl;
 
   return 0;
 }
